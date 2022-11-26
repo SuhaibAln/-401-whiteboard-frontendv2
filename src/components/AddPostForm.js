@@ -1,30 +1,39 @@
-import React from "react";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-export default class AddForm extends React.Component {
+import React, { useContext } from 'react';
+import { dataContext } from '../contexts/DataProvider';
+import { Text, VStack, Input, Box } from "@chakra-ui/react";
 
+function AddPostForm() {
 
-    render(){
+  const { addPost } = useContext(dataContext);
+  return (
+    <Box
+      p='20px'
+      bg='inhret'
+      color='gray.50'
+      border='8px'
+      display='flex'
+      alignItems="center"
+      justifyContent="center"
 
-        return(
-            <div className="add-form-container">
-                <h2>Add Post</h2>
-            <Form onSubmit={this.props.handleAddPost} className="post">
-      <Form.Group className="mb-4" controlId="formBasicTitle">
-        <Form.Label>Title of the post</Form.Label>
-        <Form.Control type="text" placeholder="Enter the title" />
-  
-      </Form.Group>
-
-      <Form.Group className="mb-4" controlId="formBasicDescription">
-        <Form.Label>Description</Form.Label>
-        <Form.Control type="text" placeholder="Enter the description" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form> 
-    </div>
-        )
-    }
+    >
+      <form onSubmit={addPost}>
+        <VStack
+          w='700px'
+        >
+          <Text
+            bgGradient="linear(to-l, #7928CA, #FF0080)"
+            bgClip="text"
+            fontSize="2xl">what is in your mind</Text>
+          <Input placeholder='Title' name='title' required _placeholder={{ opacity: 0.8, color: 'blue' }} bgGradient="linear(to-l, #7928CA, #FF0080)"
+            bgClip="text" />
+          <Input placeholder='Content' name='content' required _placeholder={{ opacity: 0.8, color: 'blue' }} bgGradient="linear(to-l, #7928CA, #FF0080)"
+            bgClip="text" />
+          <Input type='submit' value='Share' _placeholder={{ opacity: 0.8, color: 'blue' }} color='blue' bgGradient="linear(to-l, #7928CA, #FF0080)"
+            bgClip="text" />
+        </VStack>
+      </form>
+    </Box>
+  )
 }
+
+export default AddPostForm;
