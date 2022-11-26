@@ -1,37 +1,26 @@
-import './App.css';
-import "normalize.css";
-import "@blueprintjs/core/lib/css/blueprint.css";
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Main from './components/Main';
-import ThemeProvider from './contexs/ThemeProvider';
-import Login from './components/Login';
-import AuthProvider from './contexs/AuthProvider';
-import RefreshProvider from './contexs/RefreshProvider';
-
-
+import Register from './components/Register';
+import AuthProvider from './contexts/AuthProvider';
+import DataProvider from './contexts/DataProvider';
 
 
 function App() {
-
-
   return (
-    <RefreshProvider>
-      <AuthProvider>
-        <ThemeProvider>
-          <BrowserRouter>
-            <Header />
-            <Routes >
-              <Route exact path="/" element={<Main />}></Route>
-              <Route exact path="/login" element={<Login />}></Route>
-            </Routes>
-            <Footer />
-          </BrowserRouter>
-        </ThemeProvider>
-      </AuthProvider>
-    </RefreshProvider>
+    <AuthProvider>
+      <DataProvider>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route exact path="/login" element={<Register />}></Route>
+            <Route exact path='/' element={<Main />}></Route>
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </DataProvider>
+    </AuthProvider>
   );
 }
 

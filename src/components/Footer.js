@@ -1,15 +1,22 @@
-import React, { useContext } from 'react';
-import '../App.css';
-import { themeContext } from '../contexs/ThemeProvider';
+import React from 'react'
+import '../styles/Footer.css'
+
+import { Box, Text } from '@chakra-ui/react';
 
 function Footer() {
-  const theme_Context = useContext(themeContext);
-
   return (
-    <div className={`foot${theme_Context.mode}`}>
-      <p>&copy;Suhaib</p>
-    </div >
+    <Box
+      display='flex'
+      alignItems="center"
+      justifyContent="center"
+      minH='150px'>
+      <Text
+        bgGradient="linear(to-l, #1828CA, #AA1238)"
+        bgClip="text"
+        fontSize="xl">&copy;SUHAIB 2022</Text>
+      
+    </Box>
   )
 }
 
-export default Footer
+export default Footer;

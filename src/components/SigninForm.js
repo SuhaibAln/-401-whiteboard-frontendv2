@@ -1,46 +1,34 @@
-import React, { useContext, useState } from 'react';
-import axios from 'axios';
-import base64 from 'base-64';
-import { Link, Navigate } from 'react-router-dom';
-import { AuthContext } from '../contexs/AuthProvider';
-import cookies from "react-cookies";
-
+import React, { useContext } from 'react';
+import '../styles/SigninForm.css';
+import { authContext } from '../contexts/AuthProvider';
+import { Text, VStack, Input, Box } from "@chakra-ui/react";
 
 function SigninForm() {
-
-  const { isLogged, setIsLogged } = useContext(AuthContext)
-
-  async function login(e) {
-    e.preventDefault();
-    const username = e.target.usernameli.value;
-    const password = e.target.passwordli.value;
-    const url = `${process.env.REACT_APP_SERVER}/signin`
-    const encoded = base64.encode(`${username}:${password}`);
-    const basicAuth = { headers: { authorization: `Basic ${encoded}` } };
-    const axiosRespose = await axios.post(url, {}, basicAuth);
-    const token = axiosRespose.data.token;
-    if (token) {
-      cookies.save(`token`, token);
-      cookies.save(`username`, axiosRespose.data.user.username);
-      cookies.save(`_id`, axiosRespose.data.user._id);
-      setIsLogged(true);
-    } else {
-      alert('Login faild Enter correct Username or Password');
-    }
-  }
-
-
+  const { signIn, err } = useContext(authContext);
   return (
-    (isLogged) ? <Navigate to='/' /> :
-      <form onSubmit={login}>
-        <fieldset className='fs'>
-          <legend>Login</legend>
-          <input type='text' className='formField' placeholder='Username' id='usernameli' required></input>
-          <input type='password' className='formField' placeholder='Password' id='passwordli' required autoComplete='off'></input>
-          <input type='submit' className='formSubmit' value='login' autoComplete='off' ></input>
-        </fieldset>
+    <Box
+      p='50px'
+    >
+      <Text
+        bgGradient="linear(to-l, #7928CA, #FF0080)"
+        bgClip="text"
+        fontSize="3xl"
+        fontWeight="extrabold"
+      >Sign In</Text>
+      <form onSubmit={signIn}>
+        <VStack>
+          <Input placeholder='username' width='150px' name='username' variant='flushed' required _placeholder={{ opacity: 0.8, color: 'inherit' }} />
+          <Input placeholder='Password' width='150px' variant='flushed' name='password' required _placeholder={{ opacity: 0.8, color: 'inherit' }} />
+          <Input type='submit' value='CONTINUE' name='submit' width='150px' />
+        </VStack>
       </form>
+      <Text
+        bgGradient="linear(to-l, #7928CA, #FF0080)"
+        bgClip="text"
+        fontSize="xl">{err}
+      </Text>
+    </Box>
   )
-}
+};
 
-export default SigninForm
+export default SigninForm;

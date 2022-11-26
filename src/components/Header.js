@@ -1,36 +1,23 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { themeContext } from '../contexs/ThemeProvider';
-import { AuthContext } from '../contexs/AuthProvider';
-import cookies from "react-cookies";
+import React, { useContext } from 'react'
+import { authContext } from '../contexts/AuthProvider'
+import { When } from 'react-if';
+import cookies from 'react-cookies'
+import { Box, HStack, Button, Text } from "@chakra-ui/react";
 
 
 function Header() {
 
-  const theme_Context = useContext(themeContext);
-  const { isLogged, setIsLogged } = useContext(AuthContext);
-
-  function logOut() {
-    cookies.remove('token');
-    cookies.remove('username');
-    cookies.remove('_id');
-    setIsLogged(false);
-  }
+  const { logOut, isAuth } = useContext(authContext);
 
   return (
-    <nav className={`bp4-navbar bp4-${theme_Context.mode}`}>
-      <div className="bp4-navbar-group bp4-align-left">
-        <div className="bp4-navbar-heading">Suhaib White Board</div>
-      </div>
-      <div className="bp4-navbar-group bp4-align-right">
-        {isLogged && <Link to="/" className="bp4-button bp4-minimal bp4-icon">Main</Link>}
-        {isLogged && <button  className="bp4-button bp4-minimal bp4-icon-user">{cookies.load('username')}</button>}
-        {isLogged && <Link to="/login" className="bp4-button bp4-minimal bp4-icon" onClick={logOut}>Logout</Link>}
-        <span className="bp4-navbar-divider"></span>
-        <button className="bp4-button bp4-minimal bp4-icon" onClick={theme_Context.switchMode}>{theme_Context.mode} mode</button>
-      </div>
-    </nav>
+    <Box display='flex' justifyContent='flex-end'>
+      <HStack>
+        <When condition={isAuth}>
+          <Text>Welcome {cookies.load('username')}</Text>
+          <Button onClick={logOut}>Log Out</Button>
+        </When>
+      </HStack>
+    </Box>
   )
 }
-
-export default Header
+export default Header;

@@ -1,60 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react';
-import AuthProvider, { AuthContext } from '../contexs/AuthProvider';
+import React, { useContext, useEffect } from 'react';
+import { When } from 'react-if';
 import { Navigate } from 'react-router-dom';
-import AddPostForm from './AddPostForm';
-import axios from 'axios';
+import { authContext } from '../contexts/AuthProvider';
 import cookies from 'react-cookies';
-import Post from './Post';
-import '../App.css';
-import { themeContext } from '../contexs/ThemeProvider';
-import { RefreshContext } from '../contexs/RefreshProvider';
+import '../styles/Main.css'
+import AddPostForm from './AddPostForm';
+import PostHolder from './PostHolder';
+import { dataContext } from '../contexts/DataProvider';
 
 function Main() {
-
-
-  const { isLogged, setIsLogged } = useContext(AuthContext);
-  const { refreshMain, setRefreshMain } = useContext(RefreshContext);
-  const { mode, setMode } = useContext(themeContext);
-
-  const [posts, setPosts] = useState([]);
-
-
+  const { isAuth, setIsAuth } = useContext(authContext);
+  const { posts, getPosts, refreshMain } = useContext(dataContext);
 
   useEffect(() => {
-    const token = cookies.load("token");
-    setMode(cookies.load("mode"))
+    const token = cookies.load('token');
     if (token) {
-      setIsLogged(true);
-      const bearer = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      }
-      const url = `${process.env.REACT_APP_SERVER}/post`;
-      axios.get(url, bearer)
-        .then(resolve => {
-          const posts = resolve.data;
-          setPosts(posts);
-        })
-        .catch(reject => {
-          console.log(reject);
-        })
+      setIsAuth(true);
+      getPosts();
     }
-  }, [refreshMain])
-
+  }, [refreshMain]);  
 
   return (
     <>
-      {(isLogged) ?
-        <div className={`main${mode}`}>
-          <section>
+      <When condition={isAuth}>
+        <main className='main'>
+          <div className='input'>
             <AddPostForm />
-          </section>
-          <section className='postsPlace'>
-            {posts.map((post, index) => <Post postData={post} key={index} />)}
-          </section>
-        </div>
-        : <Navigate to='/login' />}
+          </div>
+          <div className='output'>
+            {posts.map((post, index) => <PostHolder post={post} key={index} />)}
+          </div>
+        </main>
+      </When>
+      <When condition={!isAuth}>
+        <Navigate to='/login' />
+      </When>
     </>
   )
 }
